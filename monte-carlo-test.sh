@@ -1,6 +1,6 @@
 #!/bin/bash
 
-threads=(1 2 4 8 16 24)
+threads=(1 2 4 8 16)
 execution=()
 cpus=$(grep -c ^processor /proc/cpuinfo)
 
