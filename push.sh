@@ -9,6 +9,7 @@ echo "pushing to repo..."
 if [ ! -z "$message" ]
 then
 	rm -f ./monte-carlo
+	rm -f ./results.csv
 	
 	git add .
 	git commit -m "$message"

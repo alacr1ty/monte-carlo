@@ -31,3 +31,6 @@ done
 
 echo "*	Number of CPUs:	$cpus"
 echo "*	System Load:	$(uptime)"
+
+echo -e "\nNumber of CPUs:	$cpus" >> ./results.csv
+echo -e "System Load:	$(uptime)" >> ./results.csv
