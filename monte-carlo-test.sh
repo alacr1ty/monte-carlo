@@ -1,24 +1,29 @@
 #!/bin/bash
 
+trials=(100 1000 10000 100000)
 threads=(1 2 4 8 16)
 execution=()
 cpus=$(grep -c ^processor /proc/cpuinfo)
 
-for t in ${threads[@]}
+for tr in ${trials[@]}
 do
-	echo "*	NUMT:	$t"
+	for th in ${threads[@]}
+	do
+		echo "*	NUMT:	$th"
+		echo "*	NUMTRIALS:	$tr"
 
-	g++ -DNUMT=$t monte-carlo.cpp -o monte-carlo -lm -fopenmp
-	execution=($(./monte-carlo) "${execution[@]}")
-done
+		g++ -DNUMT=$th  -DNUMTRIALS=$tr monte-carlo.cpp -o monte-carlo -lm -fopenmp
+		execution=($(./monte-carlo) "${execution[@]}")
+	done
 
-for t in $(seq 1 $((${#threads[@]}-1)))
-do
-	speedup=$(echo "${execution[$t]} / ${execution[0]}" | bc -l)
-	echo "*	${threads[$t]} to 1 thread Speedup:	$speedup"
+	for th in $(seq 1 $((${#threads[@]}-1)))
+	do
+		speedup=$(echo "${execution[$th]} / ${execution[0]}" | bc -l)
+		echo "*	${threads[$th]} to 1 thread Speedup:	$speedup"
 
-	fp=$(echo "(${threads[$t]}.0 / (${threads[$t]}.0 - 1.0)) * (1.0 - (1.0 / $speedup))" | bc -l)
-	echo "*	${threads[$t]} to 1 thread Parallel Fraction:	$fp"
+		fp=$(echo "(${threads[$th]}.0 / (${threads[$th]}.0 - 1.0)) * (1.0 - (1.0 / $speedup))" | bc -l)
+		echo "*	${threads[$th]} to 1 thread Parallel Fraction:	$fp"
+	done
 done
 
 echo "*	Number of CPUs:	$cpus"
