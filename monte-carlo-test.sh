@@ -1,6 +1,6 @@
 #!/bin/bash
 
-trials=(100 1000 10000 100000)
+trials=(100 1000 10000 100000 1000000)
 threads=(1 2 4 8 16)
 execution=()
 cpus=$(grep -c ^processor /proc/cpuinfo)
