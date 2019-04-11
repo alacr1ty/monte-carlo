@@ -4,6 +4,7 @@ trials=(100 1000 10000 100000 1000000)
 threads=(1 2 4 8 16)
 execution=()
 cpus=$(grep -c ^processor /proc/cpuinfo)
+echo -e "RESULTS:\nTrials, Threads, Speedup, Parallel Fraction" > ./results.csv
 
 for tr in ${trials[@]}
 do
@@ -22,7 +23,9 @@ do
 		echo "*	${threads[$th]} to 1 thread Speedup:	$speedup"
 
 		fp=$(echo "(${threads[$th]}.0 / (${threads[$th]}.0 - 1.0)) * (1.0 - (1.0 / $speedup))" | bc -l)
-		echo "*	${threads[$th]} to 1 thread Parallel Fraction:	$fp"
+		echo -e "*	${threads[$th]} to 1 thread Parallel Fraction:	$fp\n"
+
+		echo -e "$tr, ${threads[$th]}, $speedup, $fp" >> ./results.csv
 	done
 done
 
